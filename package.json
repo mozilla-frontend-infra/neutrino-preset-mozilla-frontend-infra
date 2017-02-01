@@ -1,0 +1,14 @@
+{
+  "name": "neutrino-preset-mozilla-rpweb",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "repository": "mozilla-rpweb/neutrino-preset-mozilla-rpweb",
+  "author": "Eli Perelman <eli@eliperelman.com>",
+  "license": "MIT",
+  "files": [
+    "src"
+  ],
+  "dependencies": {
+    "neutrino-preset-react": "^2.1.0"
+  }
+}
