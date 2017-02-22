@@ -90,7 +90,7 @@ module.exports = neutrino => {
   neutrino.config.module
     .rule('compile')
     .loader('babel', ({ options }) => {
-      options.presets.unshift(require.resolve('babel-preset-stage-2'));
+      options.presets.push(require.resolve('babel-preset-stage-2'));
 
       return { options };
     });
