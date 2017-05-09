@@ -1,12 +1,12 @@
 {
   "name": "neutrino-preset-mozilla-rpweb",
-  "version": "3.0.0",
-  "main": "src/index.js",
+  "version": "3.0.1",
+  "main": "index.js",
   "repository": "mozilla-rpweb/neutrino-preset-mozilla-rpweb",
   "author": "Eli Perelman <eli@eliperelman.com>",
   "license": "MIT",
   "files": [
-    "src"
+    "index.js"
   ],
   "dependencies": {
     "babel-plugin-transform-class-properties": "^6.24.1",
