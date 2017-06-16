@@ -1,6 +1,6 @@
 {
   "name": "neutrino-preset-mozilla-rpweb",
-  "version": "3.0.1",
+  "version": "4.0.0",
   "main": "index.js",
   "repository": "mozilla-rpweb/neutrino-preset-mozilla-rpweb",
   "author": "Eli Perelman <eli@eliperelman.com>",
@@ -9,11 +9,11 @@
     "index.js"
   ],
   "dependencies": {
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "neutrino-preset-airbnb-base": "^5.8.0",
-    "neutrino-preset-react": "^5.8.0"
+    "neutrino-middleware-loader-merge": "^6.0.1",
+    "neutrino-preset-airbnb-base": "^6.0.1",
+    "neutrino-preset-react": "^6.0.1"
   },
   "peerDependencies": {
-    "neutrino": "^5.0.0"
+    "neutrino": "^6.0.0"
   }
 }

@@ -1,9 +1,9 @@
 const airbnb = require('neutrino-preset-airbnb-base');
 const react = require('neutrino-preset-react');
+const loaderMerge = require('neutrino-middleware-loader-merge');
 
-module.exports = neutrino => {
+module.exports = (neutrino, options = {}) => {
   neutrino.use(airbnb, {
-    include: [neutrino.options.source],
     eslint: {
       rules: {
         // Specify the maximum length of a line in your program
@@ -60,31 +60,10 @@ module.exports = neutrino => {
       }
     }
   });
-  neutrino.use(react);
 
-  // Disabling Buffer by default saves 50KB in polyfills :O
-  neutrino.config.node.set('Buffer', false);
+  if (options.eslint) {
+    neutrino.use(loaderMerge('lint', 'eslint'), options.eslint);
+  }
 
-  neutrino.config.module
-    .rule('compile')
-      .use('babel')
-        .tap(options => {
-          const { presets, plugins } = options;
-          const [presetEntry, ...remainingPresets] = presets;
-          const [presetEnv, envOptions] = presetEntry;
-
-          return Object.assign({}, options, {
-            plugins: [...plugins, require.resolve('babel-plugin-transform-class-properties')],
-            presets: [
-              [
-                presetEnv,
-                Object.assign({}, envOptions, {
-                  // https://github.com/mozilla-neutrino/neutrino-dev/issues/172
-                  include: [...(envOptions.include || []), 'transform-es2015-classes']
-                })
-              ],
-              ...remainingPresets
-            ]
-          });
-        });
+  neutrino.use(react, options.react);
 };
