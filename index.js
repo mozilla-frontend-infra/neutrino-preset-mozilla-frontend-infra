@@ -5,8 +5,9 @@ const loaderMerge = require('neutrino-middleware-loader-merge');
 module.exports = (neutrino, options = {}) => {
   neutrino.use(airbnb, {
     eslint: {
+      plugins: ['eslint-plugin-react'],
       baseConfig: {
-        extends: ['eslint-plugin-react']
+        extends: ['plugin:react/recommended']
       },
       rules: {
         // Specify the maximum length of a line in your program
