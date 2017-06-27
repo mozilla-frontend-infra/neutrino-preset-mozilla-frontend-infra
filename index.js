@@ -55,7 +55,7 @@ module.exports = (neutrino, options = {}) => {
         // Ensure JSX components are PascalCase
         'react/jsx-pascal-case': 'error',
         // Require space before self-closing bracket in JSX
-        'react/jsx-space-before-closing': ['error', 'always'],
+        'react/jsx-tag-spacing': ['error', { beforeSelfClosing: 'always' }],
         // Ensure multiline JSX is wrapped in parentheses (idiomatic React)
         // Must be coupled with no-extra-parens: off
         'react/jsx-wrap-multilines': 'error',
