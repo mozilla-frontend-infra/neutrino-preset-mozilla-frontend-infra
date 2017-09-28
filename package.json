@@ -1,6 +1,6 @@
 {
   "name": "neutrino-preset-mozilla-rpweb",
-  "version": "4.2.0",
+  "version": "5.0.0",
   "main": "index.js",
   "repository": "mozilla-rpweb/neutrino-preset-mozilla-rpweb",
   "author": "Eli Perelman <eli@eliperelman.com>",
