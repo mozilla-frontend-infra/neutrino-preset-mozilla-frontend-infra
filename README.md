@@ -1,9 +1,10 @@
 # Mozilla R&P Web Neutrino React Preset
 [![NPM version][npm-image]][npm-url] [![NPM downloads][npm-downloads]][npm-url] [![Join Slack][slack-image]][slack-url]
 
-`neutrino-preset-mozilla-rpweb` is a Neutrino preset that supports building React web applications and linting them with
-Airbnb's base ESLint config, following the Airbnb styleguide with Mozilla additions. This preset is used for web
-projects within Mozilla's former Release and Productivity team.
+`neutrino-preset-mozilla-rpweb` is a Neutrino preset that supports building React web applications,
+React libraries, or JavaScript web libraries, and linting them with Airbnb's base ESLint config, following
+the Airbnb styleguide with Mozilla additions. This preset is used for web projects within Mozilla's
+former Release and Productivity team.
 
 ## Features
 
@@ -13,12 +14,12 @@ projects within Mozilla's former Release and Productivity team.
 - Support for React Hot Loader
 - Write JSX in .js or .jsx files
 - Extends from [neutrino-preset-web](https://neutrino.js.org/presets/neutrino-preset-web)
-  - Modern Babel compilation supporting ES modules, last 2 major browser versions, async functions, and dynamic imports
-  - Webpack loaders for importing HTML, CSS, images, icons, and fonts
+  - Modern Babel compilation supporting ES modules, last 2 major browser versions (1 for libraries), async functions, and dynamic imports
+  - Webpack loaders for importing HTML, CSS, images, icons, fonts, and web workers
   - Webpack Dev Server during development
   - Automatic creation of HTML pages, no templating necessary
   - Hot module replacement support
-  - Production-optimized bundles with Babili minification and easy chunking
+  - Production-optimized bundles with Babel minification and easy chunking
   - Easily extensible to customize your project as needed
 
 Extends from [neutrino-preset-airbnb-base](https://neutrino.js.org/presets/neutrino-preset-airbnb-base/)
@@ -31,7 +32,7 @@ Extends from [neutrino-preset-airbnb-base](https://neutrino.js.org/presets/neutr
 
 - Node.js v6.10+
 - Yarn or npm client
-- Neutrino v6
+- Neutrino v7
 
 ## Installation
 
@@ -60,7 +61,13 @@ by Neutrino. This means that by default all project source code should live in a
 project. This includes JavaScript files, CSS stylesheets, images, and any other assets that would be available
 to import your compiled project.
 
-## Quickstart
+| Project Type | Source | Output |
+| --- | --- | --- |
+| React app | `src` | `build` |
+| Web Library | `src` | `lib` |
+| React components | `src/components` | `lib` |
+
+## Quickstart React App
 
 After installing Neutrino and the this preset, add a new directory named `src` in the root of the project, with
 a single JS file named `index.js` in it.
@@ -116,7 +123,7 @@ Start the app, then open a browser to the address in the console:
 ✔ Build completed
 ```
 
-## Building
+## Building React App
 
 `neutrino-preset-mozilla-rpweb` builds static assets to the `build` directory by default when running `neutrino build`.
 Using the quick start example above as a reference:
@@ -125,8 +132,7 @@ Using the quick start example above as a reference:
 ❯ yarn build
 
 ✔ Building project completed
-Hash: b26ff013b5a2d5f7b824
-Version: webpack 2.6.1
+Version: webpack 3.6.0
 Time: 9773ms
                            Asset       Size    Chunks             Chunk Names
    index.dfbad882ab3d86bfd747.js     181 kB     index  [emitted]  index
@@ -142,7 +148,7 @@ You can either serve or deploy the contents of this `build` directory as a stati
 
 If you wish to copy files to the build directory that are not imported from application code, you can place
 them in a directory within `src` called `static`. All files in this directory will be copied from `src/static`
-to `build/static`.
+to `build/static`. This can be overridden with the `neutrino-middleware-copy` middleware.
 
 ## Paths
 
@@ -185,6 +191,75 @@ module.exports = {
 };
 ```
 
+By passing a `library` option, you can switch from building a React application to a web library. Set `library`
+to the name of your library as it would be exposed on the `window` object.
+
+_Example: create a `taskcluster` web library:_
+
+```js
+module.exports = {
+  use: [
+    ['neutrino-preset-mozilla-rpweb', {
+      library: 'taskcluster'
+    }]
+  ]
+};
+```
+
+By passing a `components` option, you can switch from building a React application to a set of React components.
+Set `components` to `true`.
+
+_Example: create a `taskcluster` React components library:_
+
+```js
+module.exports = {
+  use: [
+    ['neutrino-preset-mozilla-rpweb', {
+      components: true
+    }]
+  ]
+};
+```
+
+## Building libraries and components
+
+When building libraries and components, they are output to the `lib` directory by default when running `neutrino build`.
+Using the quick start example above as a reference:
+
+```bash
+❯ yarn build
+
+✔ Building project completed
+Hash: 453804a130a959d313a1
+Version: webpack 3.6.0
+Time: 350ms
+                     Asset     Size  Chunks             Chunk Names
+    YourCustomComponent.js  4.12 kB       0  [emitted]  YourCustomComponent
+YourCustomComponent.js.map  4.11 kB       0  [emitted]  YourCustomComponent
+✨  Done in 3.69s.
+```
+
+You can then publish these components to npm. When publishing your project to npm, consider excluding your `src`
+directory by using the `files` property to whitelist `lib`, or via `.npmignore` to blacklist `src`.
+
+When creating React components, these are generated as UMD named modules, with the name corresponding to the component
+file name. e.g. `src/components/Custom/index.js` maps to `Custom`, as well as `src/components/Custom.js`
+mapping to `Custom`. By default this will create an individual entry point for every top-level component found in
+`src/components`.
+
+When creating a web library, these are generated as UMD named modules based on the value you provided for the preset's
+`library` option.
+
+These modules are ES-compatible modules, so they can be `import`ed as expected. If you want to use them with CJS
+`require`, you'll need to use the `.default` property to access the default exports:
+
+```js
+const YourCustomComponent = require('your-custom-component').default;
+```
+
+Your library or components can also be used from script tags provided your dependencies have been loaded prior to the
+inclusion of your generated library or components.
+
 ## Customizing
 
 To override the build configuration, start with the documentation on [customization](https://neutrino.js.org/customization).
@@ -213,6 +288,21 @@ module.exports = {
       .entry('vendor')
         .add('react')
         .add('react-dom')
+  ]
+};
+```
+
+## CSS Modules
+
+You can enable CSS modules for project code using the `cssModules` option. This only enables CSS modules for
+code within `src` and not external dependencies like those in `node_modules`.
+
+```js
+module.exports = {
+  use: [
+    ['neutrino-preset-mozilla-rpweb', {
+      cssModules: true
+    }]
   ]
 };
 ```
@@ -264,6 +354,92 @@ if (module.hot) {
 
 load();
 ```
+
+## Creating React components
+
+This preset exposes 3 React components from `neutrino-preset-mozilla-rpweb/lib` to generate a component previewer
+interface:
+
+### Stories
+
+The `<Stories />` component is the container for how a series of components should be rendered. It is responsible
+for rendering the navigation menu, switching between components and component states, and rendering the selected
+component.
+
+The `<Stories />` component should be given 1 or more `<Story />` components as children.
+
+```js
+import React from 'react';
+import { render } from 'react-dom';
+import { Stories } from 'neutrino-preset-react-component/lib';
+
+const root = document.getElementById('root');
+
+render((
+  <Stories>
+    ...
+  </Stories>
+), root);
+```
+
+### Story
+
+The `<Story />` component defines how a particular component is previewed. It accepts a `component` property which
+is the component to preview.
+
+The `<Story />` component should be given 1 or more `<Props />` components as children which will be used to
+render the specified component upon selection.
+
+```js
+import React from 'react';
+import { render } from 'react-dom';
+import { Stories, Story } from 'neutrino-preset-mozilla-rpweb/lib';
+
+const root = document.getElementById('root');
+
+class Example extends React.Component {}
+
+render((
+  <Stories>
+    <Story component={Example}>
+      ...
+    </Story>
+  </Stories>
+), root);
+```
+
+### Props
+
+The `<Props />` component defines what props are passed to the `<Story />`'s component when this story is
+selected. All props and children passed to this `Props` will be passed as props to the component.
+
+The `<Props />` component should be given a `name` property for displaying in the `Stories` UI.
+
+```js
+import React from 'react';
+import { render } from 'react-dom';
+import { Stories, Story, Props } from 'neutrino-preset-mozilla-rpweb/lib';
+
+const root = document.getElementById('root');
+
+class Example extends React.Component {
+  render() {
+    return <h1>Hello {this.props.message || 'world'}</h1>;
+  }
+}
+
+render((
+  <Stories>
+    <Story component={Example}>
+      <Props name="Default" />
+      <Props name="With 'Internet'" message="Internet" />
+      <Props name="With emphasis" message="WORLD!!!" />
+    </Story>
+  </Stories>
+), root);
+```
+
+![example gif](neutrino-react-components-example.gif)
 
 [npm-image]: https://img.shields.io/npm/v/neutrino-preset-mozilla-rpweb.svg
 [npm-downloads]: https://img.shields.io/npm/dt/neutrino-preset-mozilla-rpweb.svg

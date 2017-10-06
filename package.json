@@ -1,20 +1,49 @@
 {
   "name": "neutrino-preset-mozilla-rpweb",
   "version": "5.0.1",
-  "main": "index.js",
+  "main": "src/index.js",
   "repository": "mozilla-rpweb/neutrino-preset-mozilla-rpweb",
   "author": "Eli Perelman <eli@eliperelman.com>",
   "license": "MIT",
   "files": [
-    "index.js"
+    "src",
+    "lib"
   ],
+  "lint-staged": {
+    "*.js": [
+      "neutrino lint --fix",
+      "git add"
+    ]
+  },
+  "scripts": {
+    "build": "neutrino build",
+    "prepare": "yarn lint && yarn build",
+    "lint": "neutrino lint",
+    "precommit": "lint-staged"
+  },
   "dependencies": {
+    "@blueprintjs/core": "^1.30.0",
+    "cache-loader": "^1.0.3",
+    "eslint-config-prettier": "^2.6.0",
+    "eslint-plugin-prettier": "^2.3.1",
     "eslint-plugin-react": "^7.4.0",
-    "neutrino-middleware-loader-merge": "^7.0.1",
-    "neutrino-preset-airbnb-base": "^7.0.1",
-    "neutrino-preset-react": "^7.0.1"
+    "neutrino-middleware-banner": "^7.1.0",
+    "neutrino-middleware-compile-loader": "^7.1.0",
+    "neutrino-middleware-loader-merge": "^7.1.0",
+    "neutrino-preset-airbnb-base": "^7.1.0",
+    "neutrino-preset-react": "^7.1.0",
+    "normalize.css": "^7.0.0",
+    "prettier": "^1.7.4",
+    "prop-types": "^15.6.0",
+    "webpack-node-externals": "^1.6.0"
   },
   "peerDependencies": {
     "neutrino": "^7.0.0"
+  },
+  "devDependencies": {
+    "husky": "^0.14.3",
+    "lint-staged": "^4.2.3",
+    "neutrino": "^7.1.0",
+    "react": "^15.6.2"
   }
 }
