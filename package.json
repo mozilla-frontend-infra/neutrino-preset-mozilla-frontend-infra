@@ -10,11 +10,11 @@
   ],
   "dependencies": {
     "eslint-plugin-react": "^7.4.0",
-    "neutrino-middleware-loader-merge": "^7.0.1",
-    "neutrino-preset-airbnb-base": "^7.0.1",
-    "neutrino-preset-react": "^7.0.1"
+    "@neutrinojs/loader-merge": "^7.0.1",
+    "@neutrinojs/airbnb-base": "^7.0.1",
+    "@neutrinojs/react": "^7.0.1"
   },
   "peerDependencies": {
-    "neutrino": "^7.0.0"
+    "neutrino": "^8.0.0"
   }
 }
