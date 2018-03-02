@@ -124,7 +124,7 @@ module.exports = (neutrino, options = {}) => {
       config.devtool('eval-source-map')
     })
     .when(
-      process.env.NODE_ENV === 'production', () => {
+      process.env.NODE_ENV === 'production', (config) => {
         config.when(
           process.env.CI === 'true' && process.env.TRAVIS_BRANCH !== 'master',
           (config) => config.devtool(false),
