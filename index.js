@@ -8,6 +8,7 @@ module.exports = (neutrino, options = {}) => {
 
   neutrino.use(airbnb, {
     eslint: {
+      fix: true,
       baseConfig: {
         extends: [
           'plugin:react/recommended',

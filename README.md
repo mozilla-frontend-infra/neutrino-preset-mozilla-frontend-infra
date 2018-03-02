@@ -1,64 +1,71 @@
-# Mozilla R&P Web Neutrino React Preset
-[![NPM version][npm-image]][npm-url] [![NPM downloads][npm-downloads]][npm-url] [![Join Slack][slack-image]][slack-url]
+# Mozilla Frontend Infra Neutrino React Preset
 
-`neutrino-preset-mozilla-rpweb` is a Neutrino preset that supports building React web applications and linting them with
-Airbnb's base ESLint config, following the Airbnb styleguide with Mozilla additions. This preset is used for web
-projects within Mozilla's former Release and Productivity team.
+`neutrino-preset-mozilla-frontend-infra` is a Neutrino preset that supports building React web applications and linting
+them with Airbnb's ESLint config, following the Airbnb styleguide with Mozilla additions. This preset is used for web
+projects within Mozilla's Frontend Infra team.
+
+[![NPM version][npm-image]][npm-url]
+[![NPM downloads][npm-downloads]][npm-url]
 
 ## Features
 
-- Extends from [neutrino-preset-react](https://neutrino.js.org/presets/neutrino-preset-react)
-- Zero upfront configuration necessary to start developing and building a React web app
-- Modern Babel compilation adding JSX and object rest spread syntax.
-- Support for React Hot Loader
-- Write JSX in .js or .jsx files
-- Extends from [neutrino-preset-web](https://neutrino.js.org/presets/neutrino-preset-web)
+- Extends from [`@neutrinojs/react`](https://neutrino.js.org/packages/react/)
+  - Zero upfront configuration necessary to start developing and building a React web app
+  - Modern Babel compilation adding JSX, object rest spread syntax, and class properties.
+  - Support for React Hot Loader
+  - Write JSX in .js or .jsx files
+  - Automatic import of React.createElement, no need to import react or React.createElement yourself
+- Ability to automatically change asset versions using an optional ID.
+- Extends from [@neutrinojs/web](https://neutrino.js.org/packages/web/)
   - Modern Babel compilation supporting ES modules, last 2 major browser versions, async functions, and dynamic imports
-  - Webpack loaders for importing HTML, CSS, images, icons, and fonts
-  - Webpack Dev Server during development
+  - webpack loaders for importing HTML, CSS, images, icons, fonts, and web workers
+  - webpack Dev Server during development
   - Automatic creation of HTML pages, no templating necessary
-  - Hot module replacement support
-  - Production-optimized bundles with Babili minification and easy chunking
+  - Automatic stylesheet extraction; importing stylesheets into modules creates bundled external stylesheets
+  - Pre-configured to support CSS Modules via *.module.css file extensions
+  - Hot Module Replacement support including CSS
+  - Tree-shaking to create smaller bundles
+  - Production-optimized bundles with Babel minification, easy chunking, and scope-hoisted modules for faster execution
   - Easily extensible to customize your project as needed
-
-Extends from [neutrino-preset-airbnb-base](https://neutrino.js.org/presets/neutrino-preset-airbnb-base/)
-- Zero upfront configuration necessary to start linting your project
-- Modern Babel knowledge supporting ES modules, JSX, and React apps
-- Highly visible during development, fails compilation when building for production
-- Easily extensible to customize your project as needed
+- Extends from [@neutrinojs/airbnb](https://neutrino.js.org/packages/airbnb/)
+  - Zero upfront configuration necessary to start linting your React project
+  - Modern Babel knowledge supporting ES modules, JSX, and more
+  - Highly visible during development, fails compilation when building for production
+- Also bakes in Prettier for unifying code style, with automatic code-fixing when starting or building.
 
 ## Requirements
 
 - Node.js v6.10+
 - Yarn or npm client
-- Neutrino v6
+- Neutrino v8
 
 ## Installation
 
-`neutrino-preset-mozilla-rpweb` can be installed via the Yarn or npm clients. Inside your project, make sure
-`neutrino` and `neutrino-preset-rpweb` are development dependencies. You will also need React and React DOM for actual
+`neutrino-preset-mozilla-frontend-infrab` can be installed via the Yarn or npm clients. Inside your project, make sure
+`neutrino` and `neutrino-preset-mozilla-frontend-infra` are development dependencies.
+You will also need React and React DOM for actual
 React development. **Yarn is highly preferred for Mozilla web projects.**
 
 #### Yarn
 
 ```bash
-❯ yarn add --dev neutrino neutrino-preset-mozilla-rpweb
+❯ yarn add --dev neutrino neutrino-preset-mozilla-frontend-infra
 ❯ yarn add react react-dom
 ```
 
 #### npm
 
 ```bash
-❯ npm install --save-dev neutrino neutrino-preset-mozilla-rpweb
+❯ npm install --save-dev neutrino neutrino-preset-mozilla-frontend-infra
 ❯ npm install --save react react-dom
 ```
 
 ## Project Layout
 
-`neutrino-preset-mozilla-rpweb` follows the standard [project layout](https://neutrino.js.org/project-layout) specified
-by Neutrino. This means that by default all project source code should live in a directory named `src` in the root of the
-project. This includes JavaScript files, CSS stylesheets, images, and any other assets that would be available
-to import your compiled project.
+`neutrino-preset-mozilla-frontend-infra` follows the standard [project layout](https://neutrino.js.org/project-layout)
+specified by Neutrino. This means that by default all project source code should live in a directory named `src` in the
+root of the project. This includes JavaScript files, CSS stylesheets, images, and any other assets that would be
+available to import your compiled project.
 
 ## Quickstart
 
@@ -66,11 +73,11 @@ After installing Neutrino and the this preset, add a new directory named `src` i
 a single JS file named `index.js` in it.
 
 ```bash
-❯ mkdir src && touch src/index.js
+❯ mkdir src && touch src/index.jsx
 ```
 
 This React preset exposes an element in the page with an ID of `root` to which you can mount your application. Edit
-your `src/index.js` file with the following:
+your `src/index.jsx` file with the following:
 
 ```jsx
 import React from 'react';
@@ -79,22 +86,23 @@ import { render } from 'react-dom';
 render(<h1>Hello world!</h1>, document.getElementById('root'));
 ```
 
-Now edit your project's package.json to add commands for starting and building the application:
+Now edit your project's package.json to add commands for starting, building, and linting the application:
 
 ```json
 {
   "scripts": {
-    "start": "neutrino start --use neutrino-preset-mozilla-rpweb",
-    "build": "neutrino build --use neutrino-preset-mozilla-rpweb"
+    "start": "neutrino start",
+    "build": "neutrino build",
+    "lint": "neutrino lint"
   }
 }
 ```
 
-If you are using `.neutrinorc.js`, add this preset to your use array instead of `--use` flags:
+Then create a `.neutrinorc.js` file in the root of the project, add this preset to your use array:
 
 ```js
 module.exports = {
-  use: ['neutrino-preset-mozilla-rpweb']
+  use: ['neutrino-preset-mozilla-frontend-infra']
 };
 ```
 
@@ -104,6 +112,7 @@ Start the app, then open a browser to the address in the console:
 
 ```bash
 ❯ yarn start
+
 ✔ Development server running on: http://localhost:5000
 ✔ Build completed
 ```
@@ -112,28 +121,28 @@ Start the app, then open a browser to the address in the console:
 
 ```bash
 ❯ npm start
+
 ✔ Development server running on: http://localhost:5000
 ✔ Build completed
 ```
 
 ## Building
 
-`neutrino-preset-mozilla-rpweb` builds static assets to the `build` directory by default when running `neutrino build`.
-Using the quick start example above as a reference:
+neutrino-preset-mozilla-frontend-infra` builds static assets to the `build` directory by default when running
+`neutrino build`. Using the quick start example above as a reference:
 
 ```bash
 ❯ yarn build
 
 ✔ Building project completed
 Hash: b26ff013b5a2d5f7b824
-Version: webpack 2.6.1
+Version: webpack 3.10.1
 Time: 9773ms
                            Asset       Size    Chunks             Chunk Names
-   index.dfbad882ab3d86bfd747.js     181 kB     index  [emitted]  index
-polyfill.57dabda41992eba7552f.js    69.2 kB  polyfill  [emitted]  polyfill
- runtime.3d9f9d2453f192a2b10f.js    1.51 kB   runtime  [emitted]  runtime
+   index.dfbad882ab3d86bfd747.v1.js     181 kB     index  [emitted]  index
+ runtime.3d9f9d2453f192a2b10f.v1.js    1.51 kB   runtime  [emitted]  runtime
                       index.html  846 bytes            [emitted]
-✨  Done in 14.62s.
+✨  Done in 4.62s.
 ```
 
 You can either serve or deploy the contents of this `build` directory as a static site.
@@ -165,7 +174,7 @@ for specific options you can override with this object.
 ```js
 module.exports = {
   use: [
-    ['neutrino-preset-mozilla-rpweb', {
+    ['neutrino-preset-mozilla-frontend-infra', {
       eslint: {
         rules: {
           semi: 'off'
@@ -188,7 +197,7 @@ module.exports = {
 ## Customizing
 
 To override the build configuration, start with the documentation on [customization](https://neutrino.js.org/customization).
-`neutrino-preset-mozilla-rpweb` does not use any additional named rules, loaders, or plugins that aren't already in use by the
+`neutrino-preset-mozilla-frontend-infra` does not use any additional named rules, loaders, or plugins that aren't already in use by the
 Web preset. See the [Web documentation customization](https://neutrino.js.org/presets/neutrino-preset-web#customizing)
 for preset-specific configuration to override.
 
@@ -208,11 +217,13 @@ _Example: Put React and React DOM into a separate "vendor" chunk:_
 ```js
 module.exports = {
   use: [
-    'neutrino-preset-mozilla-rpweb',
-    (neutrino) => neutrino.config
-      .entry('vendor')
-        .add('react')
-        .add('react-dom')
+    'neutrino-preset-mozilla-frontend-infra',
+    (neutrino) => {
+      neutrino.config
+        .entry('vendor')
+          .add('react')
+          .add('react-dom');
+    }
   ]
 };
 ```
@@ -222,7 +233,8 @@ module.exports = {
 While `neutrino-preset-react` supports Hot Module Replacement your app using React Hot Loader, it does require some
 application-specific changes in order to operate.
 
-First, install `react-hot-loader` as a dependency, this **must** be React Hot Loader v3+ (currently in beta):
+First, install `react-hot-loader` as a dependency, this **must** be React Hot Loader v3. You can use React Hot Loader
+v4, but it takes configuration changes to use.
 
 #### Yarn
 
@@ -265,8 +277,6 @@ if (module.hot) {
 load();
 ```
 
-[npm-image]: https://img.shields.io/npm/v/neutrino-preset-mozilla-rpweb.svg
-[npm-downloads]: https://img.shields.io/npm/dt/neutrino-preset-mozilla-rpweb.svg
-[npm-url]: https://npmjs.org/package/neutrino-preset-mozilla-rpweb
-[slack-image]: https://neutrino-slack.herokuapp.com/badge.svg
-[slack-url]: https://neutrino-slack.herokuapp.com/
+[npm-image]: https://img.shields.io/npm/v/neutrino-preset-mozilla-frontend-infra.svg
+[npm-downloads]: https://img.shields.io/npm/dt/neutrino-preset-mozilla-frontend-infra.svg
+[npm-url]: https://npmjs.org/package/neutrino-preset-mozilla-frontend-infra
