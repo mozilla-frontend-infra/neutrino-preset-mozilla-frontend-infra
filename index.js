@@ -1,11 +1,10 @@
-const airbnb = require('neutrino-preset-airbnb-base');
-const react = require('neutrino-preset-react');
-const loaderMerge = require('neutrino-middleware-loader-merge');
+const airbnb = require('@neutrinojs/airbnb');
+const react = require('@neutrinojs/react');
+const loaderMerge = require('@neutrinojs/loader-merge');
 
 module.exports = (neutrino, options = {}) => {
   neutrino.use(airbnb, {
     eslint: {
-      plugins: ['eslint-plugin-react'],
       baseConfig: {
         extends: ['plugin:react/recommended']
       },
