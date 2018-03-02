@@ -1,6 +1,6 @@
 {
   "name": "neutrino-preset-mozilla-frontend-infra",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "repository": "mozilla-frontend-infra/neutrino-preset-mozilla-frontend-infra",
   "author": "Eli Perelman <eli@eliperelman.com>",
