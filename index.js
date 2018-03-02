@@ -1,13 +1,20 @@
 const airbnb = require('@neutrinojs/airbnb');
 const react = require('@neutrinojs/react');
 const loaderMerge = require('@neutrinojs/loader-merge');
+const { basename, extname } = require('path');
 
 module.exports = (neutrino, options = {}) => {
+  const cacheVersion = options.cacheVersion || 'v1';
+
   neutrino.use(airbnb, {
     eslint: {
       baseConfig: {
-        extends: ['plugin:react/recommended']
+        extends: [
+          'plugin:react/recommended',
+          'eslint-config-prettier'
+        ]
       },
+      plugins: ['eslint-plugin-prettier'],
       rules: {
         // Specify the maximum length of a line in your program
         // JSX can get lengthy, so this helps alleviate that a bit
@@ -32,6 +39,26 @@ module.exports = (neutrino, options = {}) => {
         'no-extra-parens': 'off',
         // Our frontend strives to adopt functional programming practices, so we prefer const over let
         'prefer-const': 'error',
+        'prettier/prettier': ['error', {
+          singleQuote: true,
+          trailingComma: 'none',
+          bracketSpacing: true,
+          jsxBracketSameLine: true
+        }],
+        'padding-line-between-statements': [
+          'error',
+          { blankLine: 'always', prev: ['const', 'let', 'var'], next: '*' },
+          { blankLine: 'never', prev: ['const', 'let', 'var'], next: ['const', 'let', 'var'] },
+          { blankLine: 'always', prev: 'multiline-block-like', next: '*' },
+          { blankLine: 'always', prev: '*', next: ['if', 'do', 'for', 'switch', 'try', 'while'] },
+          { blankLine: 'always', prev: '*', next: 'return' }
+        ],
+        'consistent-return': 'off',
+        'no-unused-expressions': 'off',
+        'no-shadow': 'off',
+        'no-return-assign': 'off',
+        'babel/new-cap': 'off',
+        'no-mixed-operators': 'off',
         // Force JSX closing bracket to be placed right after last prop
         'react/jsx-closing-bracket-location': ['error', 'after-props'],
         // Disallow spaces for JSX attribute braces interior
@@ -69,4 +96,38 @@ module.exports = (neutrino, options = {}) => {
   }
 
   neutrino.use(react, options.react);
+
+  neutrino.config.when(neutrino.options.command === 'build', (config) => {
+      config
+        .output
+          .filename(`[name].[chunkhash].${cacheVersion}.js`)
+          .chunkFilename(`[name].[chunkhash].${cacheVersion}.js`)
+          .end()
+        .plugin('named-chunks')
+          .tap(([fn]) => [
+            chunk => {
+              if (chunk.name) {
+                return chunk.name;
+              }
+
+              const filename = fn(chunk);
+              const ext = extname(filename);
+
+              return `${basename(filename, ext)}.${cacheVersion}${ext}`;
+            }
+          ]);
+    });
+
+  neutrino.config
+    .when(process.env.NODE_ENV === 'development', config => {
+      config.devtool('eval-source-map')
+    })
+    .when(
+      process.env.NODE_ENV === 'production', () => {
+        config.when(
+          process.env.CI === 'true' && process.env.TRAVIS_BRANCH !== 'master',
+          (config) => config.devtool(false),
+          (config) => config.devtool('source-map')
+        );
+      });
 };

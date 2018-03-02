@@ -1,8 +1,8 @@
 {
-  "name": "neutrino-preset-mozilla-rpweb",
-  "version": "5.0.1",
+  "name": "neutrino-preset-mozilla-frontend-infra",
+  "version": "6.0.0",
   "main": "index.js",
-  "repository": "mozilla-rpweb/neutrino-preset-mozilla-rpweb",
+  "repository": "mozilla-frontend-infra/neutrino-preset-mozilla-frontend-infra",
   "author": "Eli Perelman <eli@eliperelman.com>",
   "license": "MIT",
   "files": [
@@ -11,8 +11,7 @@
   "dependencies": {
     "@neutrinojs/airbnb": "^8.1.2",
     "@neutrinojs/loader-merge": "^8.1.2",
-    "@neutrinojs/react": "^8.1.2",
-    "eslint-plugin-react": "^7.4.0"
+    "@neutrinojs/react": "^8.1.2"
   },
   "peerDependencies": {
     "neutrino": "^8.0.0"
