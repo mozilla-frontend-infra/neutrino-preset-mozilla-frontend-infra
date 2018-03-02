@@ -8,7 +8,7 @@ module.exports = (neutrino, options = {}) => {
 
   neutrino.use(airbnb, {
     eslint: {
-      fix: true,
+      emitWarning: process.env.NODE_ENV === 'development',
       baseConfig: {
         extends: [
           'plugin:react/recommended',
@@ -60,8 +60,13 @@ module.exports = (neutrino, options = {}) => {
         'no-return-assign': 'off',
         'babel/new-cap': 'off',
         'no-mixed-operators': 'off',
-        // Force JSX closing bracket to be placed right after last prop
-        'react/jsx-closing-bracket-location': ['error', 'after-props'],
+        // Enable anchors with react-router Link
+        'jsx-a11y/anchor-is-valid': ['error', {
+          components: ['Link'],
+          specialLink: ['to'],
+        }],
+        'jsx-a11y/click-events-have-key-events': 'off',
+        'jsx-a11y/no-static-element-interactions': 'off',
         // Disallow spaces for JSX attribute braces interior
         // JSX braces are interpolation, not objects
         'react/jsx-curly-spacing': ['error', 'never'],
@@ -69,8 +74,6 @@ module.exports = (neutrino, options = {}) => {
         'react/jsx-equals-spacing': ['error', 'never'],
         // Require JSX props to be on new lines when a component is multiline, improves readability
         'react/jsx-first-prop-new-line': ['error', 'multiline'],
-        // Ensure JSX indentation uses 2 spaces
-        'react/jsx-indent': ['error', 2],
         // Ensure JSX props are indented 2 spaces from opening tag
         'react/jsx-indent-props': ['error', 2],
         // Validate JSX has key prop when in array or iterator
@@ -87,7 +90,22 @@ module.exports = (neutrino, options = {}) => {
         // Must be coupled with no-extra-parens: off
         'react/jsx-wrap-multilines': 'error',
         // Disable enforcement of React PropTypes
-        'react/prop-types': 'off'
+        'react/default-props-match-prop-types': 'off',
+        'react/jsx-closing-bracket-location': 'off',
+        'react/jsx-handler-names': ['error', {
+          eventHandlerPrefix: 'handle',
+          eventHandlerPropPrefix: 'on',
+        }],
+        'react/jsx-indent': 'off',
+        'react/prefer-stateless-function': 'off',
+        'react/prop-types': 'off',
+        'react/sort-comp': 'off',
+        // Too strict for now:
+        'react/forbid-prop-types': 'off',
+        // Can produce false-positives:
+        'react/no-unused-prop-types': 'off',
+        // Doesn't always help with a lot of PureComponents:
+        'react/require-default-props': 'off'
       }
     }
   });
