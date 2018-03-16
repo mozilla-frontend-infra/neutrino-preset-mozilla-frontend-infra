@@ -30,8 +30,6 @@ module.exports = (neutrino, options = {}) => {
         // Allow using class methods with static/non-instance functionality
         // React lifecycle methods commonly do not use an instance context for anything
         'class-methods-use-this': 'off',
-        // Disallow trailing commas on arrays, objects, functions, et al
-        'comma-dangle': ['error', 'never'],
         // Prefer double or quotes in JSX attributes
         // http://eslint.org/docs/rules/jsx-quotes
         'jsx-quotes': ['error', 'prefer-double'],
