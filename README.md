@@ -1,15 +1,15 @@
-# Mozilla Frontend Infra Neutrino React Preset
+# Mozilla Frontend Infra Neutrino Preset
 
-`neutrino-preset-mozilla-frontend-infra` is a Neutrino preset that supports building React web applications and linting
-them with Airbnb's ESLint config, following the Airbnb styleguide with Mozilla additions. This preset is used for web
-projects within Mozilla's Frontend Infra team.
+`neutrino-preset-mozilla-frontend-infra` is a Neutrino preset that supports building React web applications or Node.js
+applications and linting them with Airbnb's ESLint config, following the Airbnb styleguide with Mozilla additions.
+This preset is used for web projects and supporting Node.js apps within Mozilla's Frontend Infra team.
 
 [![NPM version][npm-image]][npm-url]
 [![NPM downloads][npm-downloads]][npm-url]
 
 ## Features
 
-- Extends from [`@neutrinojs/react`](https://neutrino.js.org/packages/react/)
+- Extends from [`@neutrinojs/react` or `@neutrinojs/node`](https://neutrino.js.org/packages/react/)
   - Zero upfront configuration necessary to start developing and building a React web app
   - Modern Babel compilation adding JSX, object rest spread syntax, and class properties.
   - Support for React Hot Loader
@@ -41,23 +41,23 @@ projects within Mozilla's Frontend Infra team.
 
 ## Installation
 
-`neutrino-preset-mozilla-frontend-infrab` can be installed via the Yarn or npm clients. Inside your project, make sure
+`neutrino-preset-mozilla-frontend-infra` can be installed via the Yarn or npm clients. Inside your project, make sure
 `neutrino` and `neutrino-preset-mozilla-frontend-infra` are development dependencies.
 You will also need React and React DOM for actual
-React development. **Yarn is highly preferred for Mozilla web projects.**
+React development, if doing React development. **Yarn is highly preferred for Mozilla web projects.**
 
 #### Yarn
 
 ```bash
 ❯ yarn add --dev neutrino neutrino-preset-mozilla-frontend-infra
-❯ yarn add react react-dom
+❯ yarn add react react-dom # Optional for Node.js apps
 ```
 
 #### npm
 
 ```bash
 ❯ npm install --save-dev neutrino neutrino-preset-mozilla-frontend-infra
-❯ npm install --save react react-dom
+❯ npm install --save react react-dom # Optional for Node.js apps
 ```
 
 ## Project Layout
@@ -67,10 +67,13 @@ specified by Neutrino. This means that by default all project source code should
 root of the project. This includes JavaScript files, CSS stylesheets, images, and any other assets that would be
 available to import your compiled project.
 
-## Quickstart
+## React Quickstart
+
+<sup><em>Note: replace `neutrino-preset-mozilla-frontend-infra/react` with `neutrino-preset-mozilla-frontend-infra/node`
+if writing a Node.js app instead of a React app.</em></sup>
 
 After installing Neutrino and the this preset, add a new directory named `src` in the root of the project, with
-a single JS file named `index.js` in it.
+a single JS file named `index.jsx` in it.
 
 ```bash
 ❯ mkdir src && touch src/index.jsx
@@ -102,7 +105,7 @@ Then create a `.neutrinorc.js` file in the root of the project, add this preset 
 
 ```js
 module.exports = {
-  use: ['neutrino-preset-mozilla-frontend-infra']
+  use: ['neutrino-preset-mozilla-frontend-infra/react']
 };
 ```
 
@@ -128,7 +131,7 @@ Start the app, then open a browser to the address in the console:
 
 ## Building
 
-neutrino-preset-mozilla-frontend-infra` builds static assets to the `build` directory by default when running
+`neutrino-preset-mozilla-frontend-infra` builds static assets to the `build` directory by default when running
 `neutrino build`. Using the quick start example above as a reference:
 
 ```bash
@@ -169,12 +172,13 @@ object. Use an array pair instead of a string to supply these options in `.neutr
 The following shows how you can pass an options object to this preset and override its options. See the
 [Web documentation](https://neutrino.js.org/presets/neutrino-preset-web#presetoptions) or
 [Airbnb ESLint documentation](https://neutrino.js.org/presets/neutrino-preset-airbnb-base#presetoptions)
-for specific options you can override with this object.
+for specific options you can override with this object. Any options passed will be sent to the underlying
+`react` or `node` middleware, except for the `eslint` options, which is sent to the underlying `airbnb` middleware. 
 
 ```js
 module.exports = {
   use: [
-    ['neutrino-preset-mozilla-frontend-infra', {
+    ['neutrino-preset-mozilla-frontend-infra/react', {
       eslint: {
         rules: {
           semi: 'off'
@@ -217,7 +221,7 @@ _Example: Put React and React DOM into a separate "vendor" chunk:_
 ```js
 module.exports = {
   use: [
-    'neutrino-preset-mozilla-frontend-infra',
+    'neutrino-preset-mozilla-frontend-infra/react',
     (neutrino) => {
       neutrino.config
         .entry('vendor')
@@ -228,53 +232,56 @@ module.exports = {
 };
 ```
 
-## Hot Module Replacement
+## React Hot Module Replacement
 
 While `neutrino-preset-react` supports Hot Module Replacement your app using React Hot Loader, it does require some
 application-specific changes in order to operate.
 
-First, install `react-hot-loader` as a dependency, this **must** be React Hot Loader v3. You can use React Hot Loader
-v4, but it takes configuration changes to use.
+First, install `react-hot-loader` as a dependency, this **must** be React Hot Loader v4+.
 
 #### Yarn
 
 ```bash
-❯ yarn add react-hot-loader@next
+❯ yarn add react-hot-loader
 ```
 
 #### npm
 
 ```bash
-❯ npm install --save react-hot-loader@next
+❯ npm install --save react-hot-loader
 ```
 
 ---
 
-- From your `index` entry point (defaults to `src/index.*` from `neutrino.options.entry`), import an `AppContainer`
-from `react-hot-loader`. The main file may be named `index.js` or `index.jsx`. The extension is resolved by Webpack.
-- Wrap your top-level React component in the `AppContainer`.
-- Perform the application render in a reusable function for initial load and subsequent reloads.
-- Add the `hot` acceptance to call this function.
-
-For example:
+Next, wrap your top-level Application component, and any dynamically imported modules, with a call to `hot` from
+`react-hot-loader` to enable HMR. That's it! You can use decorator or HOC syntax:
 
 ```jsx
-import React from 'react';
+# src/index.jsx
 import { render } from 'react-dom';
-import { AppContainer } from 'react-hot-loader';
-import MyApp from './MyApp';
+import App from './App';
 
-const load = () => render((
-  <AppContainer>
-    <MyApp />
-  </AppContainer>
-), document.getElementById('root'));
+render(<App />, document.getElementById('root'));
+```
 
-if (module.hot) {
-  module.hot.accept('./MyApp', load);
+```jsx
+import { hot } from 'react-hot-loader';
+import { Component } from 'react';
+
+# Using decorator syntax:
+
+@hot(module)
+export default class App extends Component {
+  // ...
 }
 
-load();
+# Using HOC syntax:
+
+class App extends Component {
+  // ...
+}
+
+export default hot(module)(App);
 ```
 
 [npm-image]: https://img.shields.io/npm/v/neutrino-preset-mozilla-frontend-infra.svg
