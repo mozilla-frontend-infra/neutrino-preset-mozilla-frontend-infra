@@ -1,6 +1,6 @@
 const { basename, extname } = require('path');
 
-module.exports = (neutrino, { cacheVersion }) => {
+module.exports = (neutrino, { cacheVersion = 'v1' }) => {
   neutrino.config.when(neutrino.options.command === 'build', (config) => {
     config
       .output

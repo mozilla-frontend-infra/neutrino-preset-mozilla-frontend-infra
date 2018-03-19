@@ -1,6 +1,7 @@
 const airbnb = require('@neutrinojs/airbnb-base');
 const node = require('@neutrinojs/node');
 const loaderMerge = require('@neutrinojs/loader-merge');
+const { join } = require('path');
 const lint = require('./lint');
 const decorators = require('./decorators');
 const versioning = require('./versioning');
@@ -20,7 +21,7 @@ module.exports = (neutrino, options = {}) => {
   }
 
   neutrino.use(decorators);
-  neutrino.use(versioning);
+  neutrino.use(versioning, { cacheVersion: options.cacheVersion });
   neutrino.use(devtool);
   neutrino.config.resolve.modules.add(MODULES);
   neutrino.config.resolveLoader.modules.add(MODULES);
