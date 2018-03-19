@@ -41,7 +41,7 @@ module.exports = (neutrino, options = {}) => {
         'prefer-const': 'error',
         'prettier/prettier': ['error', {
           singleQuote: true,
-          trailingComma: 'none',
+          trailingComma: 'es5',
           bracketSpacing: true,
           jsxBracketSameLine: true
         }],
