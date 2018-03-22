@@ -93,11 +93,21 @@ module.exports = (neutrino, options = {}) => {
           },
           {
             blankLine: 'never',
+            prev: ['import'],
+            next: ['import'],
+          },
+          {
+            blankLine: 'never',
             prev: ['cjs-import'],
             next: ['cjs-import'],
           },
           {
-            blankLine: 'never',
+            blankLine: 'any',
+            prev: ['export'],
+            next: ['export'],
+          },
+          {
+            blankLine: 'any',
             prev: ['cjs-export'],
             next: ['cjs-export'],
           },
