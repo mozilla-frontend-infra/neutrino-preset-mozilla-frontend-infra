@@ -11,7 +11,7 @@ module.exports = (neutrino, opts = {}) => {
     {
       components: join(
         basename(neutrino.options.source),
-        'components/**/*.{js,jsx}'
+        'components/**/*.jsx'
       ),
       require: addBabelPolyfill ? ['babel-polyfill'] : [],
       showUsage: true,
