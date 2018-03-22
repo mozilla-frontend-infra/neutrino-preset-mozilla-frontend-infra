@@ -128,7 +128,7 @@ styleguide middleware to your `use` array before the `react-components` preset:
 module.exports = {
   use: [
     'neutrino-preset-mozilla-frontend-infra/styleguide',
-    'neutrino-preset-mozilla-frontend-infra/react',
+    'neutrino-preset-mozilla-frontend-infra/react-components',
   ],
 };
 ```
