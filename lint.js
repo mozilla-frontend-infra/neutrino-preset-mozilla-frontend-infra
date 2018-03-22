@@ -21,7 +21,7 @@ module.exports = (neutrino, options = {}) => {
         process.env.NODE_ENV === 'development' ||
         neutrino.options.command === 'styleguide:start',
       baseConfig: {
-        extends: ['plugin:react/recommended', 'eslint-config-prettier'],
+        extends: ['eslint-config-prettier'],
       },
       plugins: ['eslint-plugin-prettier'],
       rules: {

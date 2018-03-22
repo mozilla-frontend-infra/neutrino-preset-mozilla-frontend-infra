@@ -10,6 +10,9 @@ module.exports = (neutrino, options = {}) => {
     use: [
       airbnb,
       {
+        baseConfig: {
+          extends: ['plugin:react/recommended'],
+        },
         envs: ['worker', 'serviceworker'],
         rules: {
           // The worker/serviceworker envs above don't properly respect
