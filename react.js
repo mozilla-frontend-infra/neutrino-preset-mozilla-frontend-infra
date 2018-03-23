@@ -5,6 +5,7 @@ const rhl = require('./rhl');
 const versioning = require('./versioning');
 const devtool = require('./devtool');
 const localModules = require('./local-modules');
+const stage = require('./stage');
 
 module.exports = (neutrino, options = {}) => {
   neutrino.use(lint, options.eslint);
@@ -14,4 +15,5 @@ module.exports = (neutrino, options = {}) => {
   neutrino.use(versioning, { cacheVersion: options.cacheVersion });
   neutrino.use(devtool);
   neutrino.use(localModules);
+  neutrino.use(stage, options.staging);
 };

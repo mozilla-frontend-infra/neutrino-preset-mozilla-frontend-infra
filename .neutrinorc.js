@@ -4,5 +4,6 @@ module.exports = {
   },
   use: [
     './node-lint',
+    './stage',
   ],
 };
