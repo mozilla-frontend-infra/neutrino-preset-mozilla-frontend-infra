@@ -1,5 +1,4 @@
 const fork = require('@neutrinojs/fork');
-const merge = require('deepmerge');
 const lint = require('./react-lint');
 const decorators = require('./decorators');
 const devtool = require('./devtool');
@@ -14,16 +13,11 @@ module.exports = (neutrino, options = {}) => {
   neutrino.config.when(neutrino.options.command === 'build', () => {
     neutrino.use(fork, {
       configs: {
-        'components-cra': {
-          use: [
-            [
-              reactComponents,
-              merge(options, {
-                clean: false,
-              }),
-            ],
-            require.resolve('./react-components-cra'),
-          ],
+        'components-es5': {
+          options: {
+            output: 'es5',
+          },
+          use: [reactComponents, require.resolve('./react-components-es5')],
         },
       },
     });
