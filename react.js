@@ -1,4 +1,5 @@
 const react = require('@neutrinojs/react');
+const copy = require('@neutrinojs/copy');
 const lint = require('./react-lint');
 const decorators = require('./decorators');
 const rhl = require('./rhl');
@@ -10,6 +11,7 @@ const stage = require('./stage');
 module.exports = (neutrino, options = {}) => {
   neutrino.use(lint, options.eslint);
   neutrino.use(react, options);
+  neutrino.use(copy);
   neutrino.use(decorators);
   neutrino.use(rhl);
   neutrino.use(versioning, { cacheVersion: options.cacheVersion });

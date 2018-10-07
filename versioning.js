@@ -1,7 +1,7 @@
 const { basename, extname } = require('path');
 
 module.exports = (neutrino, { cacheVersion = 'v1' }) => {
-  neutrino.config.when(neutrino.options.command === 'build', config => {
+  neutrino.config.when(process.env.NODE_ENV === 'production', config => {
     config.output
       .filename(`[name].[chunkhash].${cacheVersion}.js`)
       .chunkFilename(`[name].[chunkhash].${cacheVersion}.js`)
