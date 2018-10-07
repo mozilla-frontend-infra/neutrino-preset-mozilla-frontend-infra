@@ -38,3 +38,6 @@ jspm_packages
 
 build
 .idea
+
+# ESLint cache
+.eslintcache
